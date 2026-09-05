@@ -1,0 +1,138 @@
+html<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tengo algo que decirte...</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffe6e6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            max-width: 450px;
+            width: 90%;
+        }
+        h1 { color: #d63031; }
+        p { color: #2d3436; font-size: 1.1rem; line-height: 1.5; }
+        button {
+            background-color: #d63031;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 15px;
+        }
+        button:hover { transform: scale(1.05); background-color: #e17055; }
+        .hidden { display: none; }
+        
+        /* Estilo de la carta */
+        .envelope {
+            font-size: 80px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .envelope:hover { transform: scale(1.1); }
+        
+        /* Contador */
+        .timer-box {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #d63031;
+            margin-top: 20px;
+            background: #fff0f0;
+            padding: 15px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Pantalla 1: Introducción -->
+        <div id="screen1">
+            <h1>Hola, mi amor... ❤️</h1>
+            <p>Tengo algo muy importante que decirte. He preparado esto para ti.</p>
+            <button onclick="nextScreen(1, 2)">Ver qué es</button>
+        </div>
+
+        <!-- Pantalla 2: La carta cerrada -->
+        <div id="screen2" class="hidden">
+            <h1>Tienes una carta de mi parte ✉️</h1>
+            <p>Haz clic en el sobre para abrirlo:</p>
+            <div class="envelope" onclick="nextScreen(2, 3)">✉️</div>
+        </div>
+
+        <!-- Pantalla 3: El texto romántico y la pregunta -->
+        <div id="screen3" class="hidden">
+            <h1>Para el amor de mi vida...</h1>
+            <!-- EDITAR ESTE TEXTO CON TUS PROPIAS PALABRAS -->
+            <p>Quiero escribirte esto para decirte lo especial que eres para mí. Desde que llegaste a mi vida, todo ha sido más feliz, lleno de risas y momentos inolvidables. Eres la persona con la que quiero compartir mis días, apoyarte en tus metas y crecer juntos de la mano...</p>
+            
+            <hr style="border: 0; height: 1px; background: #ffe6e6; margin: 20px 0;">
+            <h2>¿Quieres ser mi novia? 💍</h2>
+            <button onclick="startLoveStory()">¡Sí, quiero!</button>
+        </div>
+
+        <!-- Pantalla 4: El Contador -->
+        <div id="screen4" class="hidden">
+            <h1>¡Oficialmente juntos! 🎉❤️</h1>
+            <p>Llevamos exactamente:</p>
+            <div class="timer-box" id="timer">0h 0m 0s</div>
+            <p style="margin-top: 20px; font-size: 0.9rem; color: #7f8c8d;">Te amo para siempre.</p>
+        </div>
+    </div>
+
+    <script>
+        function nextScreen(hideId, showId) {
+            document.getElementById('screen' + hideId).classList.add('hidden');
+            document.getElementById('screen' + showId).classList.remove('hidden');
+        }
+
+        function startLoveStory() {
+            nextScreen(3, 4);
+            
+            // Guardamos el momento exacto del "Sí" en el navegador para que no se borre si recarga
+            let startDate = localStorage.getItem('anniversaryDate');
+            if (!startDate) {
+                startDate = new Date().getTime();
+                localStorage.setItem('anniversaryDate', startDate);
+            }
+
+            // Actualizar el reloj cada 1 segundo
+            setInterval(function() {
+                let now = new Date().getTime();
+                let distance = now - startDate;
+
+                let hours = Math.floor(distance / (1000 * 60 * 60));
+                let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("timer").innerHTML = hours + "h " + minutes + "m " + seconds + "s";
+            }, 1000);
+        }
+
+        // Si la novia ya había aceptado antes, la manda directo al contador al recargar la página
+        window.onload = function() {
+            if (localStorage.getItem('anniversaryDate')) {
+                document.getElementById('screen1').classList.add('hidden');
+                document.getElementById('screen4').classList.remove('hidden');
+                startLoveStory();
+            }
+        }
+    </script>
+</body>
+</html>
